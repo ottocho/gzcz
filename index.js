@@ -2,7 +2,7 @@ const core = require('@actions/core');
 const exec = require('@actions/exec')
 const github = require('@actions/github');
 
-async function getOctokit() {
+function getOctokit() {
   const token = core.getInput("token");
   return new github.GitHub(token);
 }
@@ -28,7 +28,7 @@ async function generateUrl() {
 }
 
 async function main() {
-  const octokit = await getOctokit()
+  const octokit = getOctokit()
   console.log(octokit.context)
   const { sha: commitSha } = octokit.context
   await build()
@@ -40,8 +40,6 @@ async function main() {
   return url
 }
 
-try {
-  main();
-} catch (error) {
+main().catch(function(error) {
   core.setFailed(error.message)
-}
+})
