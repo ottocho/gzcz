@@ -2,11 +2,6 @@ const core = require('@actions/core');
 const exec = require('@actions/exec')
 const github = require('@actions/github');
 
-function getOctokit() {
-  const token = core.getInput("github_token");
-  return new github.GitHub(token);
-}
-
 async function build() {
   const setupCommand = core.getInput('setup-command')
   const buildCommand = core.getInput('build_command')
@@ -28,7 +23,8 @@ async function generateUrl() {
 }
 
 async function main() {
-  const octokit = getOctokit()
+  const token = core.getInput("github_token");
+  const octokit = new github.GitHub(token);
   console.log(octokit.context)
   const { sha: commitSha } = octokit.context
   await build()
