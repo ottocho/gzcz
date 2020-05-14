@@ -34,6 +34,7 @@ async function main() {
   const appName = core.getInput('app_name')
   const storageType = core.getInput('storage_type')
   const path = getPath(appName, commitSha)
+  core.setOutput(`Commit path: ${path}`)
   const url = await generateUrl()
   return url
 }
