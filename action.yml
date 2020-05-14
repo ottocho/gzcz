@@ -13,12 +13,16 @@ inputs:
     description: 'output path for the build package'
     required: true
     default: 'dist'
-  app-name:
+  app_name:
     description: 'Name of the application'
     required: true
-  storage-type:
+  storage_type:
     description: 'gcs or s3'
+    required: true
     default: 'gcs'
+  github_token:
+    description: 'Token required to use octokit'
+    require: true
 outputs:
   deep-url:
     description: 'Deep url that mobile clients can use to tophat'
