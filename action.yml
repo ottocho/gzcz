@@ -1,0 +1,31 @@
+name: 'RN bundler and uploader'
+description: 'Bundles and uploads your code'
+inputs:
+  setup_command:
+    description: 'command for installing dependencies'
+    required: true
+    default: 'npm install'
+  build_command:
+    description: 'command for building app'
+    required: true
+    default: 'npm run build'
+  dist_path:
+    description: 'output path for the build package'
+    required: true
+    default: 'dist'
+  app_name:
+    description: 'Name of the application'
+    required: true
+  storage_type:
+    description: 'gcs or s3'
+    required: true
+    default: 'gcs'
+  github_token:
+    description: 'Token required to use octokit'
+    require: true
+outputs:
+  deep-url:
+    description: 'Deep url that mobile clients can use to tophat'
+runs:
+  using: 'node12'
+  main: 'index.js'
