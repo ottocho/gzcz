@@ -29,18 +29,19 @@ async function generateUrl() {
 
 async function main() {
   const octokit = await getOctokit()
+  console.log(octokit.context)
   const { sha: commitSha } = octokit.context
   await build()
   const appName = core.getInput('app_name')
   const storageType = core.getInput('storage_type')
   const path = getPath(appName, commitSha)
-  core.setOutput(`Commit path: ${path}`)
+  console.log(`Commit path: ${path}`)
   const url = await generateUrl()
   return url
 }
 
 try {
-  main();
+  await main();
 } catch (error) {
   core.setFailed(error.message)
 }
