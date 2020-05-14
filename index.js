@@ -3,7 +3,7 @@ const exec = require('@actions/exec')
 const github = require('@actions/github');
 
 function getOctokit() {
-  const token = core.getInput("token");
+  const token = core.getInput("github_token");
   return new github.GitHub(token);
 }
 
