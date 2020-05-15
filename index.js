@@ -30,7 +30,7 @@ async function main() {
     GITHUB_SHA: commitSha,
     GITHUB_ACTOR: actor,
     GITHUB_REPOSITORY: repository
-  }
+  } = process.env
   const [repoOwner, repoName] = repository.split('/')
   console.log(`repository: ${repository}`)
   console.log(`PR #${prNumber}`)
