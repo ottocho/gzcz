@@ -3,7 +3,7 @@ const exec = require('@actions/exec')
 const github = require('@actions/github');
 
 async function build() {
-  const setupCommand = core.getInput('setup-command')
+  const setupCommand = core.getInput('setup_command')
   const buildCommand = core.getInput('build_command')
   await exec.exec(setupCommand)
   await exec.exec(buildCommand)
@@ -26,6 +26,7 @@ async function main() {
   const token = core.getInput("github_token");
   const prNumber = core.getInput("pr_number")
   const octokit = new github.GitHub(token)
+  console.log(process.env)
   const repository = process.env.GITHUB_REPOSITORY.split("/")
   core.debug(`repository: ${repository}`)
   core.debug(`PR #${prNumber}`)
@@ -34,7 +35,8 @@ async function main() {
     owner: repository[0],
     repo: repository[1]
   })
-  console.log(pr)
+  console.log(pr.data)
+  const commitSha = pr.data.sha
   await build()
   const appName = core.getInput('app_name')
   const storageType = core.getInput('storage_type')
