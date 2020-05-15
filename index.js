@@ -24,9 +24,12 @@ async function generateUrl() {
 
 async function main() {
   const token = core.getInput("github_token");
+  const prNumber = core.getInput("pr_number")
   const octokit = new github.GitHub(token)
-  console.log(octokit)
-  const { sha: commitSha } = octokit
+  console.log('PR #' + prNumber)
+  console.log(octokit.pulls.get({
+    pull_number: prNumber
+  }))
   console.log('commit sha')
   console.log(commitSha)
   await build()

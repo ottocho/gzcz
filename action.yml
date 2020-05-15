@@ -23,9 +23,12 @@ inputs:
     description: 'gcs or s3'
     required: true
     default: 'gcs'
+  pr_number:
+    description: 'The number of the pull request'
+    required: true
   github_token:
     description: 'Token required to use octokit'
-    require: true
+    default: ${{ github.token }}
 outputs:
   deep-url:
     description: 'Deep url that mobile clients can use to tophat'
