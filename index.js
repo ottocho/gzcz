@@ -26,7 +26,7 @@ async function main() {
   const token = core.getInput("github_token");
   console.log(token)
   const octokit = new github.GitHub(token);
-  console.log(octokit.context)
+  console.log(octokit)
   const { sha: commitSha } = octokit.context
   await build()
   const appName = core.getInput('app_name')
