@@ -24,8 +24,10 @@ async function generateUrl() {
 
 async function main() {
   const token = core.getInput("github_token");
-  console.log(token)
-  const { sha: commitSha } = github.context
+  const octokit = new github.GitHub(token)
+  console.log(octokit)
+  const { sha: commitSha } = octokit
+  console.log('commit sha')
   console.log(commitSha)
   await build()
   const appName = core.getInput('app_name')
