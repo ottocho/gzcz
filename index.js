@@ -5,7 +5,9 @@ const github = require('@actions/github');
 async function build() {
   const setupCommand = core.getInput('setup_command')
   const buildCommand = core.getInput('build_command')
+  console.log('Running setup...')
   await exec.exec(setupCommand)
+  console.log('Building...')
   await exec.exec(buildCommand)
   console.log("Finished building.")
 }
