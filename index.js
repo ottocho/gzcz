@@ -26,12 +26,15 @@ async function main() {
   const token = core.getInput("github_token");
   const prNumber = core.getInput("pr_number")
   const octokit = new github.GitHub(token)
-  console.log('PR #' + prNumber)
-  console.log(octokit.pulls.get({
-    pull_number: prNumber
-  }))
-  console.log('commit sha')
-  console.log(commitSha)
+  const repository = process.env.GITHUB_REPOSITORY.split("/")
+  core.debug(`repository: ${repository}`)
+  core.debug(`PR #${prNumber}`)
+  const pr = await octokit.pulls.get({
+    pull_number: prNumber,
+    owner: repository[0],
+    repo: repository[1]
+  })
+  console.log(pr)
   await build()
   const appName = core.getInput('app_name')
   const storageType = core.getInput('storage_type')
