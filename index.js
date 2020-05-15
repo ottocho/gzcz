@@ -39,8 +39,8 @@ async function main() {
   console.log(`Actor: ${actor}`)
   const pr = await octokit.pulls.get({
     pull_number: prNumber,
-    owner: repository[0],
-    repo: repository[1]
+    owner: repoOwner,
+    repo: repoName
   })
   await build()
   const appName = core.getInput('app_name')
