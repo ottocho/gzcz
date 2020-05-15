@@ -25,9 +25,8 @@ async function generateUrl() {
 async function main() {
   const token = core.getInput("github_token");
   console.log(token)
-  const octokit = new github.GitHub(token);
-  console.log(octokit)
-  const { sha: commitSha } = octokit.context
+  const { sha: commitSha } = github.context
+  console.log(commitSha)
   await build()
   const appName = core.getInput('app_name')
   const storageType = core.getInput('storage_type')
