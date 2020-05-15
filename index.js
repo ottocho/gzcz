@@ -7,7 +7,7 @@ async function build() {
   const buildCommand = core.getInput('build_command')
   await exec.exec(setupCommand)
   await exec.exec(buildCommand)
-  core.setOutput("Finished building.")
+  console.log("Finished building.")
 }
 
 function getPath(appName, commitSha) {
@@ -26,17 +26,21 @@ async function main() {
   const token = core.getInput("github_token");
   const prNumber = core.getInput("pr_number")
   const octokit = new github.GitHub(token)
-  console.log(process.env)
-  const repository = process.env.GITHUB_REPOSITORY.split("/")
-  core.debug(`repository: ${repository}`)
-  core.debug(`PR #${prNumber}`)
+  const {
+    GITHUB_SHA: commitSha,
+    GITHUB_ACTOR: actor,
+    GITHUB_REPOSITORY: repository
+  }
+  const [repoOwner, repoName] = repository.split('/')
+  console.log(`repository: ${repository}`)
+  console.log(`PR #${prNumber}`)
+  console.log(`Actor: ${actor}`)
   const pr = await octokit.pulls.get({
     pull_number: prNumber,
     owner: repository[0],
     repo: repository[1]
   })
-  console.log(pr.data)
-  const commitSha = pr.data.sha
+  const commitSha = process.env.GITHUB_SHA
   await build()
   const appName = core.getInput('app_name')
   const storageType = core.getInput('storage_type')
