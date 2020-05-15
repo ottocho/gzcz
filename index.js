@@ -40,7 +40,6 @@ async function main() {
     owner: repository[0],
     repo: repository[1]
   })
-  const commitSha = process.env.GITHUB_SHA
   await build()
   const appName = core.getInput('app_name')
   const storageType = core.getInput('storage_type')
