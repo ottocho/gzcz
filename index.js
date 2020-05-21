@@ -29,17 +29,17 @@ async function getJsbundlePath(path) {
 
 async function upload(filePath, destPath) {
   // logic for uploading to gcs/s3
+  await exec(`zip -r /tmp/jsbundle.zip ${filePath}`)
   const storage = new Storage({
     projectId: core.getInput("storage_project_id"),
     keyFilename: GCS_KEY_PATH
   });
   const options = {
-    destination: destPath,
-    gzip: true
+    destination: destPath
   }
   const bucket = storage.bucket(core.getInput("storage_bucket"))
   console.log('uploading...')
-  await bucket.upload(filePath, options)
+  await bucket.upload('/tmp/jsbundle.zip', options)
 }
 
 async function generateUrl() {
