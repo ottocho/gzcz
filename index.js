@@ -1,5 +1,4 @@
 const fs = require('fs');
-const { dirname } = require('path');
 const core = require('@actions/core');
 const exec = require('@actions/exec');
 const glob = require('@actions/glob');
@@ -39,7 +38,11 @@ async function upload(filePath, destPath) {
   }
   const bucket = storage.bucket(core.getInput("storage_bucket"))
   console.log('uploading...')
-  await bucket.upload('/tmp/jsbundle.zip', options)
+  return bucket.upload('/tmp/jsbundle.zip', options).catch(e => {
+    console.log('error uploading files...')
+    console.log(e)
+    throw(e)
+  })
 }
 
 async function generateUrl() {
