@@ -11,8 +11,8 @@ function getPath(appName, commitSha) {
 }
 
 function decodeBase64(data) {
-  const buff = new Buffer(data, 'base64')
-  return buff.toJSON()
+  const buff = Buffer.from(data, 'base64')
+  return buff.toString('ascii')
 }
 
 function saveKeyFile() {
@@ -56,7 +56,6 @@ async function main() {
     owner: repoOwner,
     repo: repoName
   })
-  await build()
   const appName = core.getInput('app_name')
   const destPath = getPath(appName, commitSha)
   await upload(core.getInput('dist_path'), destPath)
