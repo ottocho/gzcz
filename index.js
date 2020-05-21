@@ -39,7 +39,6 @@ async function upload(filePath, destPath) {
   }
   const bucket = storage.bucket(core.getInput("storage_bucket"))
   console.log('uploading...')
-  await exec.exec('ls /tmp | echo')
   await bucket.upload('/tmp/jsbundle.zip', options)
 }
 
