@@ -24,7 +24,7 @@ function saveKeyFile() {
 async function getJsbundlePath(path) {
   const globber = await glob.create(path)
   const files = await globber.glob()
-  return dirname(files[0])
+  return files[0]
 }
 
 async function upload(filePath, destPath) {
