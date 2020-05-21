@@ -5,7 +5,7 @@ const glob = require('@actions/glob');
 const github = require('@actions/github');
 const { Storage } = require('@google-cloud/storage');
 
-const GCS_KEY_PATH = '/tmp/gcp_key'
+const GCS_KEY_PATH = '/tmp/gcp_key.json'
 
 function getPath(appName, commitSha) {
   return `/bundle/${appName}/COMMIT-${commitSha}`
