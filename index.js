@@ -30,6 +30,7 @@ async function upload(filePath, destPath) {
     gzip: true
   }
   const bucket = storage.bucket(core.getInput("storage_bucket"))
+  console.log('uploading...')
   await bucket.upload(filePath, options)
 }
 
