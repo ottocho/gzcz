@@ -58,8 +58,8 @@ async function main() {
   })
   await build()
   const appName = core.getInput('app_name')
-  const storageType = core.getInput('storage_type')
-  const path = getPath(appName, commitSha)
+  const destPath = getPath(appName, commitSha)
+  await upload(core.getInput('dist_path'), destPath)
   console.log(`Commit path: ${path}`)
   const url = await generateUrl()
   return url
