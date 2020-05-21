@@ -1,6 +1,8 @@
 const fs = require('fs');
+const { dirname } = require('path');
 const core = require('@actions/core');
 const exec = require('@actions/exec');
+const glob = require('@actions/glob');
 const github = require('@actions/github');
 const { Storage } = require('@google-cloud/storage');
 
@@ -17,6 +19,11 @@ function decodeBase64(data) {
 
 function saveKeyFile() {
   fs.writeFileSync(GCS_KEY_PATH, decodeBase64(core.getInput("storage_auth_token")))
+}
+
+async function getJsbundlePath(path) {
+  const globber = await glob.create(path)
+  return globber.glob()
 }
 
 async function upload(filePath, destPath) {
@@ -59,7 +66,9 @@ async function main() {
   })
   const appName = core.getInput('app_name')
   const destPath = getPath(appName, commitSha)
-  await upload(`/github/workspace/${core.getInput('dist_path')}`, destPath)
+  const jsbundlePath = await getJsbundlePath(core.getInput('dist_path'))
+  console.log('getting path...')
+  await upload(dirname(jsbundlePath[0]), destPath)
   console.log(`Commit path: ${path}`)
   const url = await generateUrl()
   return url
