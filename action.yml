@@ -8,6 +8,12 @@ inputs:
   app_name:
     description: 'Name of the application'
     required: true
+  storage_project_id:
+    description: 'The id of the storage project'
+    require: true
+  storage_auth_token:
+    description: 'The authentication file as a base64 s tring'
+    require: true
   storage_bucket:
     description: 'Name of the GCS or S3 bucket'
     require: true
