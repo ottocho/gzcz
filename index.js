@@ -15,8 +15,8 @@ function decodeBase64(data) {
   return buff.toJSON()
 }
 
-function saveKeyFile(key) {
-  fs.writeFileSync(GCS_KEY_PATH, decodeBase64(key))
+function saveKeyFile() {
+  fs.writeFileSync(GCS_KEY_PATH, decodeBase64(core.getInput("storage_auth_token")))
 }
 
 async function upload(filePath, destPath) {
