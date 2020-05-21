@@ -1,14 +1,6 @@
 name: 'RN bundler and uploader'
 description: 'Bundles and uploads your code'
 inputs:
-  setup_command:
-    description: 'command for installing dependencies'
-    required: true
-    default: 'npm install'
-  build_command:
-    description: 'command for building app'
-    required: true
-    default: 'npm run build'
   dist_path:
     description: 'output path for the build package'
     required: true

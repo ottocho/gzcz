@@ -1,23 +1,36 @@
+const fs = require('fs');
 const core = require('@actions/core');
-const exec = require('@actions/exec')
+const exec = require('@actions/exec');
 const github = require('@actions/github');
+const { Storage } = require('@google-cloud/storage');
 
-async function build() {
-  const setupCommand = core.getInput('setup_command')
-  const buildCommand = core.getInput('build_command')
-  console.log('Running setup...')
-  await exec.exec(setupCommand)
-  console.log('Building...')
-  await exec.exec(buildCommand)
-  console.log("Finished building.")
-}
+const GCS_KEY_PATH = '/tmp/gcp_key'
 
 function getPath(appName, commitSha) {
-  return `${appName}/${commitSha}`
+  return `/bundle/${appName}/COMMIT-${commitSha}`
 }
 
-async function upload() {
+function decodeBase64(data) {
+  const buff = new Buffer(data, 'base64')
+  return buff.toJSON()
+}
+
+function saveKeyFile(key) {
+  fs.writeFileSync(GCS_KEY_PATH, decodeBase64(key))
+}
+
+async function upload(filePath, destPath) {
   // logic for uploading to gcs/s3
+  const storage = new Storage({
+    projectId: core.getInput("storage_project_id"),
+    keyFilename: GCS_KEY_PATH
+  });
+  const options = {
+    destination: destPath,
+    gzip: true
+  }
+  const bucket = storage.bucket(core.getInput("storage_bucket"))
+  await bucket.upload(filePath, options)
 }
 
 async function generateUrl() {
@@ -25,6 +38,7 @@ async function generateUrl() {
 }
 
 async function main() {
+  saveKeyFile()
   const token = core.getInput("github_token");
   const prNumber = core.getInput("pr_number")
   const octokit = new github.GitHub(token)
