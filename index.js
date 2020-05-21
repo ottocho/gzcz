@@ -59,7 +59,7 @@ async function main() {
   })
   const appName = core.getInput('app_name')
   const destPath = getPath(appName, commitSha)
-  await upload(core.getInput('dist_path'), destPath)
+  await upload(`/github/workspace/${core.getInput('dist_path')}`, destPath)
   console.log(`Commit path: ${path}`)
   const url = await generateUrl()
   return url
