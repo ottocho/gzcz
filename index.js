@@ -23,7 +23,8 @@ function saveKeyFile() {
 
 async function getJsbundlePath(path) {
   const globber = await glob.create(path)
-  return globber.glob()
+  const files = await globber.glob()
+  return dirname(files[0])
 }
 
 async function upload(filePath, destPath) {
@@ -67,8 +68,8 @@ async function main() {
   const appName = core.getInput('app_name')
   const destPath = getPath(appName, commitSha)
   const jsbundlePath = await getJsbundlePath(core.getInput('dist_path'))
-  console.log('getting path...')
-  await upload(dirname(jsbundlePath[0]), destPath)
+  console.log(`jsbundle path: ${jsbundlePath}`)
+  await upload(jsbundlePath, destPath)
   console.log(`Commit path: ${path}`)
   const url = await generateUrl()
   return url
