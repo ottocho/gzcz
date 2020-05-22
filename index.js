@@ -8,7 +8,7 @@ const { Storage } = require('@google-cloud/storage');
 const GCS_KEY_PATH = '/tmp/gcp_key.json'
 
 function getPath(appName, commitSha) {
-  return `bundle/${appName}/COMMIT-${commitSha}`
+  return `bundle/${appName}/commit-${commitSha}`
 }
 
 function decodeBase64(data) {
