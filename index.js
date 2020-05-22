@@ -75,7 +75,11 @@ async function main() {
   console.log(`jsbundle path: ${jsbundlePath}`)
   await upload(jsbundlePath, destPath)
   const url = generateUrl(destPath)
-  const body = `![](https://api.qrserver.com/v1/create-qr-code/?size=300&data=${url})`
+  const body = `
+Use this QR code to load commit ${commitSha.slice(0,7)}\n
+![](https://api.qrserver.com/v1/create-qr-code/?size=300&data=${url})\n
+Or copy and paste this url: ${url}
+`
   const { data: comment } = await octokit.issues.createComment({
     owner: repoOwner,
     repo: repoName,
