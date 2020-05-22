@@ -20,10 +20,6 @@ function saveKeyFile() {
   fs.writeFileSync(GCS_KEY_PATH, decodeBase64(core.getInput("storage_auth_token")))
 }
 
-function getJsbundlePath(workspacePath, buildPath) {
-  return `${workspacePath}/${buildPath}`
-}
-
 async function upload(filePath, destPath) {
   // logic for uploading to gcs/s3
   await exec.exec(`zip -r /tmp/jsbundle.zip ${filePath}`)
@@ -57,9 +53,11 @@ async function main() {
     GITHUB_SHA: prSha,
     GITHUB_ACTOR: actor,
     GITHUB_REPOSITORY: repository,
-    GITHUB_WORKSPACE: workspacePath
+    GITHUB_WORKSPACE: workspacePath,
+    GITHUB_EVENT_PATH: eventPath
   } = process.env
   console.log(prSha)
+  console.log(JSON.parse(fs.readFileSync(eventPath)))
   const [repoOwner, repoName] = repository.split('/')
   console.log(`repository: ${repository}`)
   console.log(`PR #${prNumber}`)
