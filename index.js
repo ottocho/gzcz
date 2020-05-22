@@ -8,7 +8,7 @@ const { Storage } = require('@google-cloud/storage');
 const GCS_KEY_PATH = '/tmp/gcp_key.json'
 
 function getPath(appName, commitSha) {
-  return `/bundle/${appName}/COMMIT-${commitSha}`
+  return `bundle/${appName}/COMMIT-${commitSha}`
 }
 
 function decodeBase64(data) {
@@ -45,8 +45,9 @@ async function upload(filePath, destPath) {
   })
 }
 
-async function generateUrl() {
+async function generateUrl(destPath) {
   // logic to generate deep url and QR code
+  return `rn-tophat://${destPath}`
 }
 
 async function main() {
@@ -74,8 +75,15 @@ async function main() {
   console.log(`jsbundle path: ${jsbundlePath}`)
   await upload(jsbundlePath, destPath)
   console.log(`Commit path: ${path}`)
-  const url = await generateUrl()
-  return url
+  const url = generateUrl(destPath)
+  const body = `[](https://api.qrserver.com/v1/create-qr-code/?size=300&data=${url})`
+  const { data: comment } = await octokit.issues.createComment({
+    owner: repoOwner,
+    repo: repoName,
+    issue_number: prNumber,
+    body
+  })
+  return comment.id
 }
 
 main().catch(function(error) {
