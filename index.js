@@ -8,7 +8,7 @@ const { Storage } = require('@google-cloud/storage');
 const GCS_KEY_PATH = '/tmp/gcp_key.json'
 
 function getPath(appName, commitSha) {
-  return `bundle/${appName}/commit-${commitSha}`
+  return `bundle/${appName}/${commitSha}`
 }
 
 function decodeBase64(data) {
@@ -20,10 +20,8 @@ function saveKeyFile() {
   fs.writeFileSync(GCS_KEY_PATH, decodeBase64(core.getInput("storage_auth_token")))
 }
 
-async function getJsbundlePath(path) {
-  const globber = await glob.create(path)
-  const files = await globber.glob()
-  return files[0]
+function getJsbundlePath(workspacePath, buildPath) {
+  return `${workspacePath}/${buildPath}`
 }
 
 async function upload(filePath, destPath) {
@@ -34,7 +32,7 @@ async function upload(filePath, destPath) {
     keyFilename: GCS_KEY_PATH
   });
   const options = {
-    destination: destPath
+    destination: `${destPath}/jsbundle.zip`
   }
   const bucket = storage.bucket(core.getInput("storage_bucket"))
   console.log('uploading...')
@@ -56,9 +54,12 @@ async function main() {
   const prNumber = core.getInput("pr_number")
   const octokit = new github.GitHub(token)
   const {
+    GITHUB_SHA: prSha,
     GITHUB_ACTOR: actor,
-    GITHUB_REPOSITORY: repository
+    GITHUB_REPOSITORY: repository,
+    GITHUB_WORKSPACE: workspacePath
   } = process.env
+  console.log(prSha)
   const [repoOwner, repoName] = repository.split('/')
   console.log(`repository: ${repository}`)
   console.log(`PR #${prNumber}`)
@@ -72,7 +73,7 @@ async function main() {
   const commitSha = pr.data.head.sha;
   const appName = core.getInput('app_name')
   const destPath = getPath(appName, commitSha)
-  const jsbundlePath = await getJsbundlePath(core.getInput('dist_path'))
+  const jsbundlePath = `${workspacePath}/${core.getInput('dist_path')}`
   console.log(`jsbundle path: ${jsbundlePath}`)
   await upload(jsbundlePath, destPath)
   const url = generateUrl(destPath)
