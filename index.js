@@ -56,7 +56,6 @@ async function main() {
   const prNumber = core.getInput("pr_number")
   const octokit = new github.GitHub(token)
   const {
-    GITHUB_SHA: commitSha,
     GITHUB_ACTOR: actor,
     GITHUB_REPOSITORY: repository
   } = process.env
@@ -69,6 +68,7 @@ async function main() {
     owner: repoOwner,
     repo: repoName
   })
+  const commitSha = pr.head.sha;
   const appName = core.getInput('app_name')
   const destPath = getPath(appName, commitSha)
   const jsbundlePath = await getJsbundlePath(core.getInput('dist_path'))
@@ -78,7 +78,8 @@ async function main() {
   const body = `
 Use this QR code to load commit ${commitSha.slice(0,7)}\n
 ![](https://api.qrserver.com/v1/create-qr-code/?size=300&data=${url})\n
-Or copy and paste this url: ${url}
+Or copy and paste this url:\n
+${url}
 `
   const { data: comment } = await octokit.issues.createComment({
     owner: repoOwner,
