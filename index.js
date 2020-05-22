@@ -8,7 +8,7 @@ const { Storage } = require('@google-cloud/storage');
 const GCS_KEY_PATH = '/tmp/gcp_key.json'
 
 function getPath(appName, commitSha) {
-  return `bundle/${appName}/${commitSha}`
+  return `bundle/${appName}/commit-${commitSha}`
 }
 
 function decodeBase64(data) {
@@ -47,28 +47,22 @@ function generateUrl(destPath) {
 async function main() {
   saveKeyFile()
   const token = core.getInput("github_token");
-  const prNumber = core.getInput("pr_number")
   const octokit = new github.GitHub(token)
   const {
-    GITHUB_SHA: prSha,
     GITHUB_ACTOR: actor,
     GITHUB_REPOSITORY: repository,
     GITHUB_WORKSPACE: workspacePath,
     GITHUB_EVENT_PATH: eventPath
   } = process.env
-  console.log(prSha)
-  console.log(JSON.parse(fs.readFileSync(eventPath)))
+  const event = JSON.parse(fs.readFileSync(eventPath))
+  const pr = event.pull_request
+  const prNumber = pr.number
   const [repoOwner, repoName] = repository.split('/')
+  console.log(pr._links.comments)
   console.log(`repository: ${repository}`)
   console.log(`PR #${prNumber}`)
   console.log(`Actor: ${actor}`)
-  const pr = await octokit.pulls.get({
-    pull_number: prNumber,
-    owner: repoOwner,
-    repo: repoName
-  })
-  console.log(pr)
-  const commitSha = pr.data.head.sha;
+  const commitSha = pr.head.sha;
   const appName = core.getInput('app_name')
   const destPath = getPath(appName, commitSha)
   const jsbundlePath = `${workspacePath}/${core.getInput('dist_path')}`
