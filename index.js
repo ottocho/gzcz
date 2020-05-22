@@ -68,7 +68,8 @@ async function main() {
     owner: repoOwner,
     repo: repoName
   })
-  const commitSha = pr.head.sha;
+  console.log(pr)
+  const commitSha = pr.data.head.sha;
   const appName = core.getInput('app_name')
   const destPath = getPath(appName, commitSha)
   const jsbundlePath = await getJsbundlePath(core.getInput('dist_path'))
