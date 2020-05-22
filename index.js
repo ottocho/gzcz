@@ -74,7 +74,6 @@ async function main() {
   const jsbundlePath = await getJsbundlePath(core.getInput('dist_path'))
   console.log(`jsbundle path: ${jsbundlePath}`)
   await upload(jsbundlePath, destPath)
-  console.log(`Commit path: ${path}`)
   const url = generateUrl(destPath)
   const body = `[](https://api.qrserver.com/v1/create-qr-code/?size=300&data=${url})`
   const { data: comment } = await octokit.issues.createComment({
